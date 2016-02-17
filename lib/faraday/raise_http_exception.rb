@@ -46,6 +46,8 @@ module FaradayMiddleware
           # handle HTML response here as empty JSON
           if e.message.match /unexpected token/
             nil
+          elsif e.message.match /not found/i
+            nil
           else
             raise e
           end

@@ -68,6 +68,21 @@ describe Faraday::Response do
     end
   end
 
+  context 'when a 404 is raised with an HTML response' do
+    before do
+      stub_get('users/self/feed.json').to_return(
+        :body => '<html><head><title>Page Not Found &bull; Instagram</title></head><body><h2>Sorry, this page isn\'t available.</h2></body></html>',
+        :status => 404
+      )
+    end
+
+    it 'should raise an Instagram::BadGateway' do
+      lambda do
+        @client.user_media_feed()
+      end.should raise_error(Instagram::NotFound)
+    end
+  end
+
   context 'when a 502 is raised with an HTML response' do
     before do
       stub_get('users/self/feed.json').to_return(
